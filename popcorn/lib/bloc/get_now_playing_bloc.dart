@@ -2,22 +2,24 @@ import 'package:popcorn/model/movie_response.dart';
 import 'package:popcorn/repository/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MoviesListBloc {
+class NowPlayingListBloc {
   final MovieRepository _repository = MovieRepository();
   final BehaviorSubject<MovieResponse> _movieResponseSubject =
-      BehaviorSubject<MovieResponse>();
+  BehaviorSubject<MovieResponse>();
 
   getMovies() async{
-    MovieResponse response = await _repository.getMovies();
+    MovieResponse response = await _repository.getPlayingNowMovies();
     _movieResponseSubject.sink.add(response);
   }
 
-  dispose() {
+  void drainStream() => _movieResponseSubject.value=null;
+
+  void dispose() async{
+    await _movieResponseSubject.drain();
     _movieResponseSubject.close();
   }
 
   BehaviorSubject<MovieResponse> get subject=> _movieResponseSubject;
 }
 
-final moviesBloc = MoviesListBloc();
-
+final nowPlayingBloc = NowPlayingListBloc();

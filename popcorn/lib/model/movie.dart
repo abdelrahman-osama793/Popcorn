@@ -5,7 +5,7 @@ class Movie {
   final String backPoster;
   final String poster;
   final String overview;
-  final String rating;
+  var rating;
 
   Movie(this.id, this.popularity, this.title, this.backPoster, this.poster,
       this.overview, this.rating);

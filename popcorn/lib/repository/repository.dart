@@ -1,23 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:popcorn/model/genre_response.dart';
-import 'package:popcorn/model/movie.dart';
 import 'package:popcorn/model/movie_response.dart';
 import 'package:popcorn/model/person_response.dart';
 
 class MovieRepository {
-  final String apiKey = "<<themoviedb.org - c6a909474b2065a2bb14199a819e5414>>";
-  static String mainUrl = "api.themoviedb.org/3";
+  final String _apiKey = "c6a909474b2065a2bb14199a819e5414";
   final Dio _dio = Dio();
 
-  var getPopularityUrl = "$mainUrl/movie/top_rated";
-  var getMoviesUrl = "$mainUrl/discover/movie";
-  var getPlayingUrl = "$mainUrl/movie/now_playing";
-  var getGenresUrl = "$mainUrl/genre/movie/list";
-  var getPersonsUrl = "$mainUrl/trending/person/week";
+  var getPopularityUrl = "https://api.themoviedb.org/3/movie/top_rated";
+  var getMoviesUrl = "https://api.themoviedb.org/3/discover/movie";
+  var getPlayingUrl = "https://api.themoviedb.org/3/movie/now_playing";
+  var getGenresUrl = "https://api.themoviedb.org/3/genre/movie/list";
+  var getPersonsUrl = "https://api.themoviedb.org/3/trending/person/week";
 
   Future<MovieResponse> getMovies() async {
     var params = {
-      "api_key": apiKey,
+      "api_key": _apiKey,
       "language": "en-US",
       "page": 1,
     };
@@ -32,7 +30,7 @@ class MovieRepository {
 
   Future<MovieResponse> getPlayingNowMovies() async {
     var params = {
-      "api_key": apiKey,
+      "api_key": _apiKey,
       "language": "en-US",
       "page": 1,
     };
@@ -40,14 +38,15 @@ class MovieRepository {
       Response response =
           await _dio.get(getPlayingUrl, queryParameters: params);
       return MovieResponse.fromJson(response.data);
-    } catch (error) {
+    } catch (error, stacktrace){
+    print("Exception occured: $error stackTrace: $stacktrace");
       return MovieResponse.withError("$error");
     }
   }
 
   Future<GenreResponse> getGenres() async {
     var params = {
-      "api_key": apiKey,
+      "api_key": _apiKey,
       "language": "en-US",
       "page": 1,
     };
@@ -55,16 +54,18 @@ class MovieRepository {
       Response response = await _dio.get(getGenresUrl, queryParameters: params);
       return GenreResponse.fromJson(response.data);
     } catch (error) {
+
       return GenreResponse.withError("$error");
     }
   }
 
   Future<PersonResponse> getPersons() async {
     var params = {
-      "api_key": apiKey,
+      "api_key": _apiKey,
     };
     try {
-      Response response = await _dio.get(getPersonsUrl, queryParameters: params);
+      Response response =
+          await _dio.get(getPersonsUrl, queryParameters: params);
       return PersonResponse.fromJson(response.data);
     } catch (error) {
       return PersonResponse.withError("$error");
@@ -73,7 +74,7 @@ class MovieRepository {
 
   Future<MovieResponse> getMovieByGenre(int id) async {
     var params = {
-      "api_key": apiKey,
+      "api_key": _apiKey,
       "language": "en-US",
       "page": 1,
       "with_genres": id,
@@ -85,5 +86,4 @@ class MovieRepository {
       return MovieResponse.withError("$error");
     }
   }
-
 }
