@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:popcorn/model/movie_response.dart';
 import 'package:popcorn/repository/repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,8 +12,10 @@ class MoviesListByGenreBloc {
     MovieResponse response = await _repository.getMovieByGenre(id);
     _movieByGenreResponseSubject.sink.add(response);
   }
-
-  dispose() {
+  void drainStream() => _movieByGenreResponseSubject.value = null;
+  @mustCallSuper
+  void dispose() async{
+    await _movieByGenreResponseSubject.drain();
     _movieByGenreResponseSubject.close();
   }
 

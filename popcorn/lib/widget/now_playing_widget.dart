@@ -1,9 +1,11 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:popcorn/bloc/get_now_playing_bloc.dart';
 import 'package:popcorn/model/movie.dart';
 import 'package:popcorn/model/movie_response.dart';
+import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/style/theme.dart' as style;
 
 class NowPlayingWidget extends StatefulWidget {
@@ -61,7 +63,10 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Error occurred: $error"),
+          Text(
+            "Error occurred: $error",
+            style: kFontStyle14,
+          ),
         ],
       ),
     );
@@ -76,7 +81,10 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("No Movies"),
+            Text(
+              "No Movies",
+              style: kFontStyle14,
+            ),
           ],
         ),
       );
@@ -84,41 +92,8 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              MediaQuery.of(context).size.width * 0.05,
-              MediaQuery.of(context).size.width * 0.03,
-              MediaQuery.of(context).size.width * 0.05,
-              0.0,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "New Release",
-                  style: TextStyle(
-                    height: 1.5,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Text(
-                  "See All",
-                  style: TextStyle(
-                    letterSpacing: 1.0,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white60,
-                  ),
-                ),
-              ],
-            ),
-          ),
           Container(
-            padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-            height: 250,
+            height: MediaQuery.of(context).size.height * .28,
             child: PageIndicatorContainer(
               align: IndicatorAlign.bottom,
               indicatorSpace: 8.0,
@@ -136,9 +111,8 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                         opacity: 0.8,
                         child: Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 250,
+                          height: MediaQuery.of(context).size.height * .28,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.0),
                             image: DecorationImage(
                               image: NetworkImage(
                                   "https://image.tmdb.org/t/p/original/" +
@@ -149,10 +123,10 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                         ),
                       ),
                       Positioned(
-                        bottom: 30.0,
+                        bottom: MediaQuery.of(context).size.width * .05,
                         child: Container(
                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                          width: 250.0,
+                          width: MediaQuery.of(context).size.width * .5,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -162,8 +136,26 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                                   height: 1.5,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
+                                  fontSize: 17.0,
                                 ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                children: [
+                                  Icon(
+                                    EvaIcons.star,
+                                    color: style.Colors.secondaryColor,
+                                    size: 15.0,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .01,
+                                  ),
+                                  Text(
+                                    (movies[index].rating).toString(),
+                                    style: kFontStyle14,
+                                  ),
+                                ],
                               ),
                             ],
                           ),

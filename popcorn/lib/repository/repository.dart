@@ -16,7 +16,6 @@ class MovieRepository {
   Future<MovieResponse> getMovies() async {
     var params = {
       "api_key": _apiKey,
-      "language": "en-US",
       "page": 1,
     };
     try {
@@ -31,15 +30,14 @@ class MovieRepository {
   Future<MovieResponse> getPlayingNowMovies() async {
     var params = {
       "api_key": _apiKey,
-      "language": "en-US",
       "page": 1,
     };
     try {
       Response response =
           await _dio.get(getPlayingUrl, queryParameters: params);
       return MovieResponse.fromJson(response.data);
-    } catch (error, stacktrace){
-    print("Exception occured: $error stackTrace: $stacktrace");
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
       return MovieResponse.withError("$error");
     }
   }
@@ -47,14 +45,13 @@ class MovieRepository {
   Future<GenreResponse> getGenres() async {
     var params = {
       "api_key": _apiKey,
-      "language": "en-US",
       "page": 1,
     };
     try {
       Response response = await _dio.get(getGenresUrl, queryParameters: params);
       return GenreResponse.fromJson(response.data);
-    } catch (error) {
-
+    } catch (error, stacktrace) {
+      print("Exception occurred: $error stackTrace: $stacktrace");
       return GenreResponse.withError("$error");
     }
   }
@@ -75,7 +72,6 @@ class MovieRepository {
   Future<MovieResponse> getMovieByGenre(int id) async {
     var params = {
       "api_key": _apiKey,
-      "language": "en-US",
       "page": 1,
       "with_genres": id,
     };
