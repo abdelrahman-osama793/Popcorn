@@ -100,7 +100,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
               padding: EdgeInsets.all(5.0),
               indicatorColor: style.Colors.titleColor,
               indicatorSelectorColor: style.Colors.secondaryColor,
-              shape: IndicatorShape.circle(size: 6.0),
+              shape: IndicatorShape.circle(size: 8.0),
               child: PageView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: movies.take(5).length,
@@ -125,7 +125,10 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                       Positioned(
                         bottom: MediaQuery.of(context).size.width * .05,
                         child: Container(
-                          padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * .04,
+                            right: 10.0,
+                          ),
                           width: MediaQuery.of(context).size.width * .5,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

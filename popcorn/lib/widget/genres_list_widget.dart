@@ -40,15 +40,13 @@ class _GenresListWidgetState extends State<GenresListWidget> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 310.0,
+      height: MediaQuery.of(context).size.height * .37,
       child: DefaultTabController(
         length: genres.length,
         child: Scaffold(
           backgroundColor: style.Colors.primaryColor,
           appBar: PreferredSize(
-            child: AppBar(
-              backgroundColor: style.Colors.primaryColor,
-              bottom: TabBar(
+            child: TabBar(
                 controller: _tabController,
                 indicatorColor: style.Colors.secondaryColor,
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -59,8 +57,8 @@ class _GenresListWidgetState extends State<GenresListWidget> with SingleTickerPr
                 tabs: genres.map((Genre genre) {
                   return Container(
                     padding: EdgeInsets.only(
-                      bottom: 15.0,
-                      top: 10.0,
+                      bottom: 10.0,
+                      top: 15.0,
                     ),
                     child: Text(
                       genre.name.toUpperCase(),
@@ -72,7 +70,6 @@ class _GenresListWidgetState extends State<GenresListWidget> with SingleTickerPr
                   );
                 }).toList(),
               ),
-            ),
             preferredSize: Size.fromHeight(50),
           ),
           body: TabBarView(
