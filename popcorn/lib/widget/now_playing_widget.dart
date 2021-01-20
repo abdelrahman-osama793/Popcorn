@@ -1,10 +1,10 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:page_indicator/page_indicator.dart';
 import 'package:popcorn/bloc/get_now_playing_bloc.dart';
 import 'package:popcorn/model/movie.dart';
 import 'package:popcorn/model/movie_response.dart';
+import 'package:popcorn/screens/details_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/style/theme.dart' as style;
 
@@ -22,21 +22,40 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<MovieResponse>(
-        stream: nowPlayingBloc.subject.stream,
-        builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-              return _buildErrorWidget(
-                  snapshot.data.error); //error in data widget
-            }
-            return _buildNowPlayingWidget(snapshot.data);
-          } else if (snapshot.hasError) {
-            return _buildErrorWidget(snapshot.error); //error widget
-          } else {
-            return _buildLoadingWidget();
-          }
-        });
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            left: MediaQuery.of(context).size.width * .04,
+            top: MediaQuery.of(context).size.width * .02,
+          ),
+          child: Text(
+            "NOW PLAYING MOVIES",
+            style: kSectionTitleFontStyle,
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.width * .01,
+        ),
+        StreamBuilder<MovieResponse>(
+            stream: nowPlayingBloc.subject.stream,
+            builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+                  return _buildErrorWidget(
+                      snapshot.data.error); //error in data widget
+                }
+                return _buildNowPlayingWidget(snapshot.data);
+              } else if (snapshot.hasError) {
+                return _buildErrorWidget(snapshot.error); //error widget
+              } else {
+                return _buildLoadingWidget();
+              }
+            }),
+      ],
+    );
   }
 
   Widget _buildLoadingWidget() {
@@ -73,8 +92,8 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
   }
 
   Widget _buildNowPlayingWidget(MovieResponse nowPlayingMoviesData) {
-    List<Movie> movies = nowPlayingMoviesData.movies;
-    if (movies.length == 0) {
+    List<Movie> nowPlayingMovies = nowPlayingMoviesData.movies;
+    if (nowPlayingMovies.length == 0) {
       return Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -91,32 +110,46 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
     } else {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             height: MediaQuery.of(context).size.height * .28,
-            child: PageIndicatorContainer(
-              align: IndicatorAlign.bottom,
-              indicatorSpace: 8.0,
-              padding: EdgeInsets.all(5.0),
-              indicatorColor: style.Colors.titleColor,
-              indicatorSelectorColor: style.Colors.secondaryColor,
-              shape: IndicatorShape.circle(size: 8.0),
-              child: PageView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: movies.take(5).length,
-                itemBuilder: (context, index) {
-                  return Stack(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: nowPlayingMovies.take(10).length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    MediaQuery.of(context).size.width * .03,
+                    MediaQuery.of(context).size.height * .015,
+                    MediaQuery.of(context).size.width * .01,
+                    MediaQuery.of(context).size.height * .02,
+                  ),
+                  child: Stack(
                     children: [
-                      Opacity(
-                        opacity: 0.8,
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: nowPlayingMovies[index])));
+                        },
                         child: Container(
-                          width: MediaQuery.of(context).size.width,
+                          width: MediaQuery.of(context).size.width * .85,
                           height: MediaQuery.of(context).size.height * .28,
                           decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white12,
+                                offset: Offset(0.0, 2.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(20.0),
                             image: DecorationImage(
                               image: NetworkImage(
                                   "https://image.tmdb.org/t/p/original/" +
-                                      movies[index].backPoster),
+                                      nowPlayingMovies[index].backPoster),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -134,7 +167,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                movies[index].title,
+                                nowPlayingMovies[index].title,
                                 style: TextStyle(
                                   height: 1.5,
                                   color: Colors.white,
@@ -155,7 +188,7 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                                         MediaQuery.of(context).size.width * .01,
                                   ),
                                   Text(
-                                    (movies[index].rating).toString(),
+                                    (nowPlayingMovies[index].rating).toString(),
                                     style: kFontStyle14,
                                   ),
                                 ],
@@ -165,10 +198,9 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                         ),
                       ),
                     ],
-                  );
-                },
-              ),
-              length: movies.take(5).length,
+                  ),
+                );
+              },
             ),
           ),
         ],

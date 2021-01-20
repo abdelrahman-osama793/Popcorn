@@ -16,7 +16,7 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    moviesBloc..getMovies();
+    moviesListBloc..getMovies();
   }
 
   @override
@@ -31,18 +31,14 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
           ),
           child: Text(
             "TOP RATED MOVIES",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: 16.0,
-            ),
+            style: kSectionTitleFontStyle,
           ),
         ),
         SizedBox(
           height: MediaQuery.of(context).size.width * .01,
         ),
         StreamBuilder<MovieResponse>(
-          stream: moviesBloc.subject.stream,
+          stream: moviesListBloc.subject.stream,
           builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data.error != null && snapshot.data.error.length > 0) {
@@ -114,7 +110,6 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
       return Container(
         // The container that contains the list of movies selected according to genres
         height: MediaQuery.of(context).size.height * .3,
-        // margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * .03),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: topRatedMovies.length,

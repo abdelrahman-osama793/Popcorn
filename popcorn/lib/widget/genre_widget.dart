@@ -15,13 +15,13 @@ class _GenresWidgetState extends State<GenresWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    genresBloc..getGenres();
+    genresListBloc..getGenres();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<GenreResponse>(
-        stream: genresBloc.subject.stream,
+        stream: genresListBloc.subject.stream,
         builder: (context, AsyncSnapshot<GenreResponse> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.error != null && snapshot.data.error.length > 0) {

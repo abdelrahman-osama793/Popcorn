@@ -12,12 +12,11 @@ class MoviesListBloc {
     _movieResponseSubject.sink.add(response);
   }
 
-  dispose() {
-    _movieResponseSubject.close();
-  }
+  dispose() => _movieResponseSubject.close();
+
 
   BehaviorSubject<MovieResponse> get subject=> _movieResponseSubject;
 }
 
-final moviesBloc = MoviesListBloc();
+final moviesListBloc = MoviesListBloc();
 

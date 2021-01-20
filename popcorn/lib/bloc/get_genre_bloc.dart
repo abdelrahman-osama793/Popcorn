@@ -12,11 +12,10 @@ class GenreListBloc {
     _genreResponseSubject.sink.add(response);
   }
 
-  dispose() {
-    _genreResponseSubject.close();
-  }
+  dispose() => _genreResponseSubject.close();
+
 
   BehaviorSubject<GenreResponse> get subject=> _genreResponseSubject;
 }
 
-final genresBloc = GenreListBloc();
+final genresListBloc = GenreListBloc();

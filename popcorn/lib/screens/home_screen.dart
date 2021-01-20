@@ -36,8 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         children: [
           NowPlayingWidget(),
-          GenresWidget(),
           TopRatedMoviesWidget(),
+          GenresWidget(),
         ],
       ),
     );
