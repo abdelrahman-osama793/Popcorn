@@ -1,16 +1,19 @@
 import 'dart:ui';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:popcorn/bloc/get_video_bloc.dart';
 import 'package:popcorn/model/movie.dart';
 import 'package:popcorn/model/video.dart';
 import 'package:popcorn/model/video_response.dart';
+import 'package:popcorn/screens/video_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/style/theme.dart' as style;
+import 'package:popcorn/widget/cast_widget.dart';
 import 'package:popcorn/widget/movie_details_widget.dart';
+import 'package:popcorn/widget/similar_movies_widget.dart';
 import 'package:sliver_fab/sliver_fab.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailsScreen extends StatefulWidget {
   final Movie movie;
@@ -82,6 +85,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               background: Stack(
                 children: [
                   Container(
+                    //container that contains the back poster
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
@@ -118,6 +122,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ),
                   ),
                   Positioned(
+                    //container that contains the poster
                     top: MediaQuery.of(context).size.height * .1,
                     left: MediaQuery.of(context).size.width * .3,
                     child: Container(
@@ -127,8 +132,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                           image: DecorationImage(
                               image: NetworkImage(
-                                  "http://image.tmdb.org/t/p/w200/" +
-                                      movie.poster),
+                                "http://image.tmdb.org/t/p/w200/" +
+                                    movie.poster,
+                              ),
                               fit: BoxFit.cover),
                           color: Colors.white),
                     ),
@@ -141,6 +147,31 @@ class _DetailsScreenState extends State<DetailsScreen> {
             padding: EdgeInsets.all(0.0),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * .03,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        EvaIcons.star,
+                        color: style.Colors.secondaryColor,
+                        size: 14.0,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .01,
+                      ),
+                      Text(
+                        movie.rating.toString() + "/10",
+                        style: kFontStyle14.copyWith(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * .03,
@@ -172,9 +203,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height*.02,
+                  height: MediaQuery.of(context).size.height * .02,
                 ),
-                MovieDetailsWidget(movieId: movie.id,),
+                MovieDetailsWidget(movieId: movie.id),
+                CastWidget(movieId: movie.id),
+                SimilarMoviesWidget(movieId: movie.id),
               ]),
             ),
           ),
@@ -190,7 +223,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
       child: Icon(
         EvaIcons.playCircle,
       ),
-      onPressed: null,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoScreen(
+              youtubePlayerController: YoutubePlayerController(
+                initialVideoId: videos[0].key,
+                flags: YoutubePlayerFlags(
+                  autoPlay: true,
+                  controlsVisibleAtStart: true,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

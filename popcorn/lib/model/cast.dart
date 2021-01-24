@@ -12,7 +12,7 @@ class Cast {
   );
 
   Cast.fromJson(Map<String, dynamic> json)
-      : id = json["id"],
+      : id = json["cast_id"],
         name = json["name"],
         character = json["character"],
         profileImg = json["profile_path"];

@@ -62,14 +62,13 @@ class MovieRepository {
     }
   }
 
-  Future<CastResponse> getCast(int id) async {
+  Future<CastResponse> getCast(int movieId) async {
     var params = {
       "api_key": _apiKey,
       "language": "en-US",
     };
     try {
-      Response response =
-          await _dio.get(getMovieDetailsUrl + "/$id" + "/credits", queryParameters: params);
+      Response response = await _dio.get(getMovieDetailsUrl + "/$movieId" + "/credits", queryParameters: params);
       return CastResponse.fromJson(response.data);
     } catch (error, stacktrace) {
       print("Exception occurred: $error stackTrace: $stacktrace");

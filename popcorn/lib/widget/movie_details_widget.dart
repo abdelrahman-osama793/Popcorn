@@ -101,11 +101,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
                 children: [
                   Text(
                     "BUDGET",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0,
-                    ),
+                    style: kDetailsPageTitlesStyle,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .01,
@@ -132,11 +128,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
                 children: [
                   Text(
                     "DURATION",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0,
-                    ),
+                    style: kDetailsPageTitlesStyle,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .01,
@@ -156,11 +148,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
                 children: [
                   Text(
                     "RELEASE DATE",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.0,
-                    ),
+                    style:kDetailsPageTitlesStyle,
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * .01,
@@ -189,11 +177,7 @@ class _MovieDetailsWidgetState extends State<MovieDetailsWidget> {
               children: [
                 Text(
                   "GENRES",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.0,
-                  ),
+                  style: kDetailsPageTitlesStyle,
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * .01,

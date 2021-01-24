@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:popcorn/bloc/get_movies_bloc.dart';
+import 'package:popcorn/bloc/get_similar_movies_bloc.dart';
 import 'package:popcorn/model/movie.dart';
 import 'package:popcorn/model/movie_response.dart';
 import 'package:popcorn/screens/details_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/widget/rounded_rectangle_container.dart';
 
-class TopRatedMoviesWidget extends StatefulWidget {
+class SimilarMoviesWidget extends StatefulWidget {
+  final int movieId;
+  const SimilarMoviesWidget({Key key, this.movieId}) : super(key: key);
+
   @override
-  _TopRatedMoviesWidgetState createState() => _TopRatedMoviesWidgetState();
+  _SimilarMoviesWidgetState createState() => _SimilarMoviesWidgetState(movieId);
 }
 
-class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
+class _SimilarMoviesWidgetState extends State<SimilarMoviesWidget> {
+  final int movieId;
+  _SimilarMoviesWidgetState(this.movieId);
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    moviesListBloc..getMovies();
+    similarMoviesBloc..getSimilarMovies(movieId);
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    similarMoviesBloc..drainStream();
   }
 
   @override
@@ -30,7 +42,7 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
             top: MediaQuery.of(context).size.width * .02,
           ),
           child: Text(
-            "TOP RATED MOVIES",
+            "SIMILAR MOVIES",
             style: kSectionTitleFontStyle,
           ),
         ),
@@ -38,7 +50,7 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
           height: MediaQuery.of(context).size.width * .01,
         ),
         StreamBuilder<MovieResponse>(
-          stream: moviesListBloc.subject.stream,
+          stream: similarMoviesBloc.subject.stream,
           builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data.error != null &&
@@ -46,7 +58,7 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
                 return _buildErrorWidget(
                     snapshot.data.error); //error in data widget
               }
-              return _buildTopRatedMoviesWidget(snapshot.data);
+              return _buildSimilarMoviesWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error); //error widget
             } else {
@@ -91,9 +103,9 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
     );
   }
 
-  Widget _buildTopRatedMoviesWidget(MovieResponse topRatedMoviesData) {
-    List<Movie> topRatedMovies = topRatedMoviesData.movies;
-    if (topRatedMovies.length == 0) {
+  Widget _buildSimilarMoviesWidget(MovieResponse similarMoviesData) {
+    List<Movie> similarMovies = similarMoviesData.movies;
+    if (similarMovies.length == 0) {
       return Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -113,16 +125,16 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
         height: MediaQuery.of(context).size.height * .32,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: topRatedMovies.length,
+          itemCount: similarMovies.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: topRatedMovies[index])));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: similarMovies[index])));
               },
               child: RoundedRectangleContainer(
-                title: topRatedMovies[index].title,
-                rating: topRatedMovies[index].rating.toString(),
-                poster: topRatedMovies[index].poster,
+                title: similarMovies[index].title,
+                rating: similarMovies[index].rating.toString(),
+                poster: similarMovies[index].poster,
               ),
             );
           },
@@ -131,4 +143,3 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
     }
   }
 }
-
