@@ -6,6 +6,8 @@ import 'package:popcorn/screens/details_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/widget/rounded_rectangle_container.dart';
 
+import 'loading_error_widgets/loading_widget.dart';
+
 class MoviesByGenreWidget extends StatefulWidget {
   final int genreId;
 
@@ -39,28 +41,9 @@ class _MoviesByGenreWidgetState extends State<MoviesByGenreWidget> {
           } else if (snapshot.hasError) {
             return _buildErrorWidget(snapshot.error); //error widget
           } else {
-            return _buildLoadingWidget();
+            return LoadingWidget();
           }
         });
-  }
-
-  Widget _buildLoadingWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
-        ],
-      ),
-    );
   }
 
   Widget _buildErrorWidget(String error) {

@@ -5,16 +5,20 @@ import 'package:popcorn/bloc/get_cast_bloc.dart';
 import 'package:popcorn/model/cast.dart';
 import 'package:popcorn/model/cast_response.dart';
 import 'package:popcorn/style/text_styles.dart';
+import 'package:popcorn/widget/loading_error_widgets/loading_widget.dart';
 
 class CastWidget extends StatefulWidget {
   final int movieId;
+
   const CastWidget({Key key, @required this.movieId}) : super(key: key);
+
   @override
   _CastWidgetState createState() => _CastWidgetState(movieId);
 }
 
 class _CastWidgetState extends State<CastWidget> {
   final int movieId;
+
   _CastWidgetState(this.movieId);
 
   @override
@@ -51,15 +55,14 @@ class _CastWidgetState extends State<CastWidget> {
           stream: getCastBloc.subject.stream,
           builder: (context, AsyncSnapshot<CastResponse> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
+              if (snapshot.data.error != null && snapshot.data.error.length > 0) {
                 return _buildErrorWidget(snapshot.data.error);
               }
               return _buildCastWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error);
             } else {
-              return _buildLoadingWidget();
+              return LoadingWidget();
             }
           },
         ),
@@ -132,7 +135,7 @@ class _CastWidgetState extends State<CastWidget> {
                   children: [
                     cast[index].profileImg == null
                         ? Container(
-                      // in case of no photo
+                            // in case of no photo
                             height: MediaQuery.of(context).size.height * .15,
                             width: MediaQuery.of(context).size.width * .25,
                             decoration: BoxDecoration(
@@ -146,7 +149,7 @@ class _CastWidgetState extends State<CastWidget> {
                             ),
                           )
                         : Container(
-                      // if there is a photo
+                            // if there is a photo
                             height: MediaQuery.of(context).size.height * .15,
                             width: MediaQuery.of(context).size.width * .25,
                             decoration: BoxDecoration(
@@ -160,8 +163,7 @@ class _CastWidgetState extends State<CastWidget> {
                               ],
                               image: DecorationImage(
                                 image: NetworkImage(
-                                  "https://image.tmdb.org/t/p/w300/" +
-                                      cast[index].profileImg,
+                                  "https://image.tmdb.org/t/p/w300/" + cast[index].profileImg,
                                 ),
                                 fit: BoxFit.cover,
                               ),

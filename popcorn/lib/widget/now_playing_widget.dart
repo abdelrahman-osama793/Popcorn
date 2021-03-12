@@ -8,6 +8,8 @@ import 'package:popcorn/screens/details_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/style/theme.dart' as style;
 
+import 'loading_error_widgets/loading_widget.dart';
+
 class NowPlayingWidget extends StatefulWidget {
   @override
   _NowPlayingWidgetState createState() => _NowPlayingWidgetState();
@@ -24,7 +26,6 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
         Padding(
           padding: EdgeInsets.only(
@@ -44,36 +45,16 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
             builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data.error != null && snapshot.data.error.length > 0) {
-                  return _buildErrorWidget(
-                      snapshot.data.error); //error in data widget
+                  return _buildErrorWidget(snapshot.data.error); //error in data widget
                 }
                 return _buildNowPlayingWidget(snapshot.data);
               } else if (snapshot.hasError) {
                 return _buildErrorWidget(snapshot.error); //error widget
               } else {
-                return _buildLoadingWidget();
+                return LoadingWidget();
               }
             }),
       ],
-    );
-  }
-
-  Widget _buildLoadingWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -128,13 +109,14 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                     MediaQuery.of(context).size.width * .01,
                     MediaQuery.of(context).size.height * .02,
                   ),
-                  child: Stack(
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: nowPlayingMovies[index])));
-                        },
-                        child: Container(
+                  child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => DetailsScreen(movie: nowPlayingMovies[index])));
+                    },
+                    child: Stack(
+                      children: [
+                        Container(
                           width: MediaQuery.of(context).size.width * .85,
                           height: MediaQuery.of(context).size.height * .28,
                           decoration: BoxDecoration(
@@ -148,56 +130,54 @@ class _NowPlayingWidgetState extends State<NowPlayingWidget> {
                             borderRadius: BorderRadius.circular(20.0),
                             image: DecorationImage(
                               image: NetworkImage(
-                                  "https://image.tmdb.org/t/p/original/" +
-                                      nowPlayingMovies[index].backPoster),
+                                  "https://image.tmdb.org/t/p/original/" + nowPlayingMovies[index].backPoster),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                        bottom: MediaQuery.of(context).size.width * .05,
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * .04,
-                            right: 10.0,
-                          ),
-                          width: MediaQuery.of(context).size.width * .5,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                nowPlayingMovies[index].title,
-                                style: TextStyle(
-                                  height: 1.5,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17.0,
+                        Positioned(
+                          bottom: MediaQuery.of(context).size.width * .05,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * .04,
+                              right: 10.0,
+                            ),
+                            width: MediaQuery.of(context).size.width * .5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  nowPlayingMovies[index].title,
+                                  style: TextStyle(
+                                    height: 1.5,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.0,
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                children: [
-                                  Icon(
-                                    EvaIcons.star,
-                                    color: style.Colors.secondaryColor,
-                                    size: 15.0,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .01,
-                                  ),
-                                  Text(
-                                    (nowPlayingMovies[index].rating).toString(),
-                                    style: kFontStyle14,
-                                  ),
-                                ],
-                              ),
-                            ],
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  children: [
+                                    Icon(
+                                      EvaIcons.star,
+                                      color: style.Colors.secondaryColor,
+                                      size: 15.0,
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width * .01,
+                                    ),
+                                    Text(
+                                      (nowPlayingMovies[index].rating).toString(),
+                                      style: kFontStyle14,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
