@@ -6,6 +6,8 @@ import 'package:popcorn/screens/details_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/widget/rounded_rectangle_container.dart';
 
+import 'loading_error_widgets/loading_widget.dart';
+
 class TopRatedMoviesWidget extends StatefulWidget {
   @override
   _TopRatedMoviesWidgetState createState() => _TopRatedMoviesWidgetState();
@@ -41,39 +43,18 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
           stream: moviesListBloc.subject.stream,
           builder: (context, AsyncSnapshot<MovieResponse> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return _buildErrorWidget(
-                    snapshot.data.error); //error in data widget
+              if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+                return _buildErrorWidget(snapshot.data.error); //error in data widget
               }
               return _buildTopRatedMoviesWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error); //error widget
             } else {
-              return _buildLoadingWidget();
+              return LoadingWidget();
             }
           },
         )
       ],
-    );
-  }
-
-  Widget _buildLoadingWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -116,8 +97,9 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
           itemCount: topRatedMovies.length,
           itemBuilder: (context, index) {
             return GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: topRatedMovies[index])));
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => DetailsScreen(movie: topRatedMovies[index])));
               },
               child: RoundedRectangleContainer(
                 title: topRatedMovies[index].title,
@@ -131,4 +113,3 @@ class _TopRatedMoviesWidgetState extends State<TopRatedMoviesWidget> {
     }
   }
 }
-

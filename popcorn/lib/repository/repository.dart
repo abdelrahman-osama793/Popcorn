@@ -10,6 +10,7 @@ class MovieRepository {
   static String _baseUrl = "https://api.themoviedb.org/3";
   final Dio _dio = Dio();
 
+  var getSearchUrl = "$_baseUrl/search/movie";
   var getPopularityUrl = "$_baseUrl/movie/top_rated";
   var getMoviesUrl = "$_baseUrl/discover/movie";
   var getPlayingUrl = "$_baseUrl/movie/now_playing";
@@ -25,6 +26,20 @@ class MovieRepository {
     try {
       Response response =
           await _dio.get(getPopularityUrl, queryParameters: params);
+      return MovieResponse.fromJson(response.data);
+    } catch (error) {
+      return MovieResponse.withError("$error");
+    }
+  }
+
+  Future<MovieResponse> getSearch(String searchValue) async {
+    var params = {
+      "api_key": _apiKey,
+      "query": searchValue,
+    };
+    try {
+      Response response =
+      await _dio.get(getSearchUrl, queryParameters: params);
       return MovieResponse.fromJson(response.data);
     } catch (error) {
       return MovieResponse.withError("$error");

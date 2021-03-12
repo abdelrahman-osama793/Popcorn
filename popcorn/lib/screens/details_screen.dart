@@ -6,10 +6,12 @@ import 'package:popcorn/bloc/get_video_bloc.dart';
 import 'package:popcorn/model/movie.dart';
 import 'package:popcorn/model/video.dart';
 import 'package:popcorn/model/video_response.dart';
+import 'package:popcorn/screens/home_screen.dart';
 import 'package:popcorn/screens/video_screen.dart';
 import 'package:popcorn/style/text_styles.dart';
 import 'package:popcorn/style/theme.dart' as style;
 import 'package:popcorn/widget/cast_widget.dart';
+import 'package:popcorn/widget/loading_error_widgets/loading_widget.dart';
 import 'package:popcorn/widget/movie_details_widget.dart';
 import 'package:popcorn/widget/similar_movies_widget.dart';
 import 'package:sliver_fab/sliver_fab.dart';
@@ -17,6 +19,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class DetailsScreen extends StatefulWidget {
   final Movie movie;
+
   DetailsScreen({Key key, @required this.movie}) : super(key: key);
 
   @override
@@ -25,6 +28,7 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   final Movie movie;
+
   _DetailsScreenState(this.movie);
 
   @override
@@ -46,37 +50,43 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return Scaffold(
       backgroundColor: style.Colors.primaryColor,
       body: SliverFab(
-        floatingPosition:
-            FloatingPosition(right: MediaQuery.of(context).size.width * .05),
+        floatingPosition: FloatingPosition(right: MediaQuery.of(context).size.width * .05),
         expandedHeight: MediaQuery.of(context).size.height * .4,
         floatingWidget: StreamBuilder<VideoResponse>(
           stream: videoBloc.subject.stream,
           builder: (context, AsyncSnapshot<VideoResponse> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.error != null &&
-                  snapshot.data.error.length > 0) {
-                return _buildErrorWidget(
-                    snapshot.data.error); //error in data widget
+              if (snapshot.data.error != null && snapshot.data.error.length > 0) {
+                return _buildErrorWidget(snapshot.data.error); //error in data widget
               }
               return _buildVideoWidget(snapshot.data);
             } else if (snapshot.hasError) {
               return _buildErrorWidget(snapshot.error); //error widget
             } else {
-              return _buildLoadingWidget();
+              return LoadingWidget();
             }
           },
         ),
         slivers: [
           SliverAppBar(
+            leading: IconButton(
+              icon: Icon(EvaIcons.arrowBack),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                );
+              },
+            ),
             backgroundColor: style.Colors.primaryColor,
             expandedHeight: MediaQuery.of(context).size.height * .4,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               title: Text(
-                movie.title.length > 40
-                    ? movie.title.substring(0, 35) + "..."
-                    : movie.title,
+                movie.title.length > 40 ? movie.title.substring(0, 35) + "..." : movie.title,
                 style: TextStyle(
                   fontSize: 12.0,
                   fontWeight: FontWeight.bold,
@@ -93,8 +103,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       ),
                       image: DecorationImage(
                         image: NetworkImage(
-                          "https://image.tmdb.org/t/p/original" +
-                              movie.backPoster,
+                          "https://image.tmdb.org/t/p/original" + movie.backPoster,
                         ),
                         fit: BoxFit.cover,
                       ),
@@ -132,8 +141,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                           image: DecorationImage(
                               image: NetworkImage(
-                                "http://image.tmdb.org/t/p/w200/" +
-                                    movie.poster,
+                                "http://image.tmdb.org/t/p/w200/" + movie.poster,
                               ),
                               fit: BoxFit.cover),
                           color: Colors.white),
@@ -239,25 +247,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildLoadingWidget() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 25.0,
-            width: 25.0,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 4.0,
-            ),
-          )
-        ],
-      ),
     );
   }
 

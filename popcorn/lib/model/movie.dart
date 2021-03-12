@@ -1,6 +1,6 @@
 class Movie {
   final int id;
-  final double popularity;
+  var popularity;
   final String title;
   final String backPoster;
   final String poster;
