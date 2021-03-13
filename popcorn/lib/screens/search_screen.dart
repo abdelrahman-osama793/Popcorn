@@ -52,9 +52,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 filled: true,
-                prefixIcon: Icon(
-                  EvaIcons.searchOutline,
-                  color: style.Colors.secondaryColor,
+                prefixIcon: IconButton(
+                  icon: Icon(
+                    EvaIcons.arrowBack,
+                    color: style.Colors.secondaryColor,
+                  ),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
                 ),
                 suffixIcon: IconButton(
                     icon: Icon(
